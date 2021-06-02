@@ -195,7 +195,7 @@ public:
 		double y2 = get_next_point(i).getY();
 		double x2 = get_next_point(i).getX();
 		//интересуют лишь новые точки, поэтому границы промежутка не войдут
-		if ((y - y1) * (y - y2) < 0 and (x - x1) * (x - x2) < 0) return true;
+		if ((y - y1) * (y - y2) <= 0 and (x - x1) * (x - x2) <= 0) return true;
 		return false;
 	}
 	void addition()
