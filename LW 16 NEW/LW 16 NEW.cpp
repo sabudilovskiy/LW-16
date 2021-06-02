@@ -111,6 +111,11 @@ public:
 };
 Point cross_lines(Line a, Line b, bool& cross)
 {
+	if (a.getkX() == b.getkX() and a.getkY() == b.getkY())
+	{
+		cross = false;
+		return Point();
+	}
 	if (GROW <= a.get_id() and a.get_id() <= WANE and GROW <= b.get_id() and b.get_id() <= WANE)
 	{
 		double x = (b.getm() - a.getm()) / (a.getkX() - b.getkX());
