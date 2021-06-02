@@ -553,73 +553,71 @@ int main()
 			}
 		}
 	}
+	bool error;
+	int u = 1;
+	while (u < n and lines[u].getkX() == lines[0].getkX() and lines[u].getkY() == lines[0].getkY()) u++;
+	if (u != n)
 	{
-		bool error;
-		int i = 1;
-		while (i < n and lines[i].getkX() == lines[0].getkX() and lines[i].getkY() == lines[0].getkY()) i++;
-		if (i != n)
+		Point cross = cross_lines(lines[0], lines[u], error);
+		for (int p = 1; p <= 2; p++)
 		{
-			Point cross = cross_lines(lines[0], lines[i], error);
-			for (int p = 1; p <= 2; p++)
+			for (int q = 1; q <= 2; q++)
 			{
-				for (int q = 1; q <= 2; q++)
+				std::vector <Point> points;
+				std::vector <Line> buffer;
+				buffer.push_back(lines[0]);
+				buffer.push_back(lines[u]);
+				if (lines[0].get_id() != ONLY_X)
 				{
-					std::vector <Point> points;
-					std::vector <Line> buffer;
-					buffer.push_back(lines[0]);
-					buffer.push_back(lines[i]);
-					if (lines[0].get_id() != ONLY_X)
-					{
-						points.push_back(Point(INFINITY * pow(-1, p), lines[0].getY(INFINITY * pow(-1, p))));
-					}
-					else
-					{
-						points.push_back(Point(INFINITY * pow(-1, p), -lines[0].getm()));
-					}
-					points.push_back(cross);
-					if (lines[i].get_id() != ONLY_X)
-					{
-						points.push_back(Point(INFINITY * pow(-1, q), lines[i].getY(INFINITY * pow(-1, q))));
-					}
-					else
-					{
-						points.push_back(Point(INFINITY * pow(-1, q), -lines[i].getm()));
-					}
-					figures.push_back(Figure(points, buffer));
+					points.push_back(Point(INFINITY * pow(-1, p), lines[0].getY(INFINITY * pow(-1, p))));
 				}
+				else
+				{
+					points.push_back(Point(INFINITY * pow(-1, p), -lines[0].getm()));
+				}
+				points.push_back(cross);
+				if (lines[u].get_id() != ONLY_X)
+				{
+					points.push_back(Point(INFINITY * pow(-1, q), lines[u].getY(INFINITY * pow(-1, q))));
+				}
+				else
+				{
+					points.push_back(Point(INFINITY * pow(-1, q), -lines[u].getm()));
+				}
+				figures.push_back(Figure(points, buffer));
 			}
-			lines.erase(lines.begin() + i);
+		}
+		lines.erase(lines.begin() + u);
+		lines.erase(lines.begin());
+		while (lines.empty() == false)
+		{
+			int n = figures.size();
+			for (int j = 0; j < n; j++)
+			{
+				std::vector <Figure> replace = figures[0].cross_line(lines[0]);
+				if (replace.size() != 1)
+				{
+					//std::cout << "Было" << std::endl;
+					//figures[0].print();
+					//std::cout << "Стало" << std::endl;
+					//replace[0].print();
+					//replace[1].print();
+					figures.push_back(replace[0]);
+					figures.push_back(replace[1]);
+				}
+				else
+				{
+					figures.push_back(replace[0]);
+				}
+				figures.erase(figures.begin());
+			}
 			lines.erase(lines.begin());
-			while (lines.empty() == false)
-			{
-				int n = figures.size();
-				for (int j = 0; j < n; j++)
-				{
-					std::vector <Figure> replace = figures[0].cross_line(lines[0]);
-					if (replace.size() != 1)
-					{
-						//std::cout << "Было" << std::endl;
-						//figures[0].print();
-						//std::cout << "Стало" << std::endl;
-						//replace[0].print();
-						//replace[1].print();
-						figures.push_back(replace[0]);
-						figures.push_back(replace[1]);
-					}
-					else
-					{
-						figures.push_back(replace[0]);
-					}
-					figures.erase(figures.begin());
-				}
-				lines.erase(lines.begin());
-			}
 		}
-		else
-		{
-			std::cout << "Плоскость делится заданными прямыми на " << n + 1 << " частей.";
-		}
+		/*for (int i = 0; i < figures.size(); i++) figures[i].print();*/
+		std::cout << "Всего фигур: " << figures.size();
 	}
-	for (int i = 0; i < figures.size(); i++) figures[i].print();
-	std::cout << "Всего фигур: " << figures.size();
+	else
+	{
+		std::cout << "Плоскость делится заданными прямыми на " << n + 1 << " частей.";
+	}
 }
